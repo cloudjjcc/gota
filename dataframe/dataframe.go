@@ -908,9 +908,9 @@ func LoadStructs(i interface{}, options ...LoadOption) DataFrame {
 			}
 			var s series.Series
 			if immutable {
-				s = series.NewImmutable(val, t, fieldName)
+				s = series.NewImmutable(elements, t, fieldName)
 			} else {
-				s = series.New(val, t, fieldName)
+				s = series.New(elements, t, fieldName)
 			}
 			columns = append(columns, s)
 		}
