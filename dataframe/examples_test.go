@@ -2,8 +2,8 @@ package dataframe_test
 
 import (
 	"fmt"
-	"github.com/go-gota/gota/dataframe"
-	"github.com/go-gota/gota/series"
+	"github.com/cloudjjcc/gota/dataframe"
+	"github.com/cloudjjcc/gota/series"
 	"strings"
 )
 

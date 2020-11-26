@@ -1,7 +1,7 @@
 package series_test
 
 import (
-	"github.com/go-gota/gota/series"
+	"github.com/cloudjjcc/gota/series"
 	"math/rand"
 	"strconv"
 	"testing"

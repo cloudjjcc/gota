@@ -6,7 +6,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
-	"github.com/go-gota/gota/series"
+	"github.com/cloudjjcc/gota/series"
 	"io"
 	"reflect"
 	"sort"

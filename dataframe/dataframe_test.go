@@ -2,7 +2,7 @@ package dataframe
 
 import (
 	"bytes"
-	"github.com/go-gota/gota/series"
+	"github.com/cloudjjcc/gota/series"
 	"reflect"
 	"strconv"
 	"strings"
