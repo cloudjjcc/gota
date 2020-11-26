@@ -13,7 +13,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/go-gota/gota/series"
+	"gota/series"
 )
 
 // DataFrame is a data structure designed for operating on table like data (Such
@@ -40,10 +40,13 @@ func New(se ...series.Series) DataFrame {
 	if se == nil || len(se) == 0 {
 		return DataFrame{Err: fmt.Errorf("empty DataFrame")}
 	}
-
 	columns := make([]series.Series, len(se))
 	for i, s := range se {
-		columns[i] = s.Copy()
+		if s.Immutable() {
+			columns[i] = s
+		} else {
+			columns[i] = s.Copy()
+		}
 	}
 	nrows, ncols, err := checkColumnsDimensions(columns...)
 	if err != nil {
@@ -840,6 +843,7 @@ func LoadStructs(i interface{}, options ...LoadOption) DataFrame {
 			field := val.Index(0).Type().Field(j)
 			fieldName := field.Name
 			fieldType := field.Type.String()
+			immutable := false
 
 			// Process struct tags
 			fieldTags := field.Tag.Get("dataframe")
@@ -847,7 +851,7 @@ func LoadStructs(i interface{}, options ...LoadOption) DataFrame {
 				continue
 			}
 			tagOpts := strings.Split(fieldTags, ",")
-			if len(tagOpts) > 2 {
+			if len(tagOpts) > 3 {
 				return DataFrame{Err: fmt.Errorf("malformed struct tag on field %s: %s", fieldName, fieldTags)}
 			}
 			if len(tagOpts) > 0 {
@@ -857,6 +861,11 @@ func LoadStructs(i interface{}, options ...LoadOption) DataFrame {
 				if len(tagOpts) == 2 {
 					if tagType := strings.TrimSpace(tagOpts[1]); tagType != "" {
 						fieldType = tagType
+					}
+				}
+				if len(tagOpts) == 3 {
+					if tagImm := strings.TrimSpace(tagOpts[2]); tagImm != "" {
+						immutable = true
 					}
 				}
 			}
@@ -898,7 +907,13 @@ func LoadStructs(i interface{}, options ...LoadOption) DataFrame {
 				elements = append(tmp, elements...)
 				fieldName = ""
 			}
-			columns = append(columns, series.New(elements, t, fieldName))
+			var s series.Series
+			if immutable {
+				s = series.NewImmutable(val, t, fieldName)
+			} else {
+				s = series.New(val, t, fieldName)
+			}
+			columns = append(columns, s)
 		}
 		return New(columns...)
 	}

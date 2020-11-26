@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/go-gota/gota/dataframe"
-	"github.com/go-gota/gota/series"
+	"gota/dataframe"
+	"gota/series"
 )
 
 func generateSeries(n, rep int) (data []series.Series) {

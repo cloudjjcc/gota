@@ -1,12 +1,12 @@
 package series
 
 import (
+	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"sort"
 	"strings"
-
-	"math"
 
 	"gonum.org/v1/gonum/stat"
 )
@@ -17,10 +17,11 @@ import (
 // elements. Most of the power of Series resides on the ability to compare and
 // subset Series of different types.
 type Series struct {
-	Name     string   // The name of the series
-	elements Elements // The values of the elements
-	t        Type     // The type of the series
-	Err      error    // If there are errors they are stored here
+	Name      string   // The name of the series
+	elements  Elements // The values of the elements
+	t         Type     // The type of the series
+	Err       error    // If there are errors they are stored here
+	immutable bool     // It is written only once and will not be modified until the end of its lifetime
 }
 
 // Elements is the interface that represents the array of elements contained on
@@ -125,10 +126,19 @@ const (
 type Indexes interface{}
 
 // New is the generic Series constructor
+func NewImmutable(values interface{}, t Type, name string) Series {
+	return _new(values, t, name, true)
+}
+
+// New is the generic Series constructor
 func New(values interface{}, t Type, name string) Series {
+	return _new(values, t, name, false)
+}
+func _new(values interface{}, t Type, name string, immutable bool) Series {
 	ret := Series{
-		Name: name,
-		t:    t,
+		Name:      name,
+		t:         t,
+		immutable: immutable,
 	}
 
 	// Pre-allocate elements
@@ -235,9 +245,21 @@ func (s Series) Empty() Series {
 	return New([]int{}, s.t, s.Name)
 }
 
+func (s *Series) Immutable() bool {
+	return s.immutable
+}
+
+var (
+	ErrImmutable = errors.New("try to modify immutable series")
+)
+
 // Append adds new elements to the end of the Series. When using Append, the
 // Series is modified in place.
 func (s *Series) Append(values interface{}) {
+	if s.immutable {
+		s.Err = ErrImmutable
+		return
+	}
 	if err := s.Err; err != nil {
 		return
 	}
@@ -317,6 +339,10 @@ func (s Series) Subset(indexes Indexes) Series {
 // Set sets the values on the indexes of a Series and returns the reference
 // for itself. The original Series is modified.
 func (s Series) Set(indexes Indexes, newvalues Series) Series {
+	if s.immutable {
+		s.Err = ErrImmutable
+		return s
+	}
 	if err := s.Err; err != nil {
 		return s
 	}

@@ -1,11 +1,10 @@
 package series_test
 
 import (
+	"gota/series"
 	"math/rand"
 	"strconv"
 	"testing"
-
-	"github.com/go-gota/gota/series"
 )
 
 func generateInts(n int) (data []int) {

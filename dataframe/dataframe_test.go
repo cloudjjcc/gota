@@ -9,7 +9,7 @@ import (
 
 	"math"
 
-	"github.com/go-gota/gota/series"
+	"gota/series"
 )
 
 // compareFloats compares floating point values up to the number of digits specified.
@@ -2363,7 +2363,7 @@ func TestLoadStructs(t *testing.T) {
 		D float64
 	}
 	type testStructTags struct {
-		A string  `dataframe:"a,string"`
+		A string  `dataframe:"a,string,true"`
 		B int     `dataframe:"b,string"`
 		C bool    `dataframe:"c,string"`
 		D float64 `dataframe:"d,string"`
