@@ -2,14 +2,13 @@ package dataframe
 
 import (
 	"bytes"
+	"github.com/go-gota/gota/series"
 	"reflect"
 	"strconv"
 	"strings"
 	"testing"
 
 	"math"
-
-	"gota/series"
 )
 
 // compareFloats compares floating point values up to the number of digits specified.

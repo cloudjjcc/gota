@@ -6,14 +6,13 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
+	"github.com/go-gota/gota/series"
 	"io"
 	"reflect"
 	"sort"
 	"strconv"
 	"strings"
 	"unicode/utf8"
-
-	"gota/series"
 )
 
 // DataFrame is a data structure designed for operating on table like data (Such

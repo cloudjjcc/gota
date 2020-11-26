@@ -1,4 +1,4 @@
-module gota
+module 	github.com/go-gota/gota
 
 go 1.14
 

@@ -2,10 +2,9 @@ package dataframe_test
 
 import (
 	"fmt"
+	"github.com/go-gota/gota/dataframe"
+	"github.com/go-gota/gota/series"
 	"strings"
-
-	"gota/dataframe"
-	"gota/series"
 )
 
 func ExampleNew() {

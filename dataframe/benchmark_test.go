@@ -1,12 +1,11 @@
 package dataframe_test
 
 import (
+	"github.com/go-gota/gota/dataframe"
+	"github.com/go-gota/gota/series"
 	"math/rand"
 	"strconv"
 	"testing"
-
-	"gota/dataframe"
-	"gota/series"
 )
 
 func generateSeries(n, rep int) (data []series.Series) {
